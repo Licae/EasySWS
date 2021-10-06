@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 
 class BluetoothReceiver(
-    private val onDeviceStateChanged: (requestCode: Int, device: BluetoothDevice) -> Unit,
+    private val onDeviceBondStateChanged: (requestCode: Int, device: BluetoothDevice) -> Unit,
     private val onDiscoveryStarted: () -> Unit,
     private val onDiscoveryFinished: () -> Unit,
     private val onFoundDevice: (device: BluetoothDevice) -> Unit,
@@ -24,14 +24,14 @@ class BluetoothReceiver(
                 val deviceHardwareAddress = device?.address
                 val bluetoothClass = device?.bluetoothClass?.deviceClass
                 val bluetoothMajor = device?.bluetoothClass?.majorDeviceClass
-                Utils.log("发现了 $deviceName 地址 $deviceHardwareAddress $bluetoothClass 子类型是 $bluetoothMajor")
+                Utils.log("发现了 $deviceName 地址 $deviceHardwareAddress $bluetoothClass 主类型是 $bluetoothMajor")
                 device?.let { onFoundDevice(it) }
             }
             BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
                 val requestCode = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1)
                 val device: BluetoothDevice? =
                     intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                device?.let { onDeviceStateChanged(requestCode, it) }
+                device?.let { onDeviceBondStateChanged(requestCode, it) }
             }
             BluetoothAdapter.ACTION_DISCOVERY_STARTED -> onDiscoveryStarted()
             BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> onDiscoveryFinished()
@@ -39,15 +39,15 @@ class BluetoothReceiver(
                 val requestCode = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
                 if(requestCode == BluetoothAdapter.STATE_OFF) onDisconnect() else onConnect()
             }
-            BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED -> {
-                val requestCode = intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, -1)
+            BluetoothDevice.ACTION_ACL_CONNECTED -> {
                 val device: BluetoothDevice? =
                     intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                when(requestCode) {
-                    BluetoothAdapter.STATE_CONNECTING -> Utils.log("设备 ${device?.name} 正在连接")
-                    BluetoothAdapter.STATE_DISCONNECTED -> Utils.log("设备 ${device?.name} 已断开连接")
-                    BluetoothAdapter.STATE_CONNECTED -> Utils.log("设备 ${device?.name} 已连接")
-                }
+                Utils.log("设备 ${device?.name} 连接了")
+            }
+            BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
+                val device: BluetoothDevice? =
+                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                Utils.log("设备 ${device?.name} 断连了")
             }
         }
     }

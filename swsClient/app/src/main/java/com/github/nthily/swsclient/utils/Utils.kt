@@ -12,10 +12,11 @@ object Utils {
     fun log(str: String) {
         Log.d(TAG, str)
     }
-    @Composable
-    fun SecondaryText(str: String) {
-        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-            Text(str)
-        }
+}
+
+@Composable
+fun SecondaryText(str: String) {
+    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+        Text(str)
     }
 }

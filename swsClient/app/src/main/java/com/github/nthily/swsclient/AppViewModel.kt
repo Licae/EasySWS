@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.nthily.swsclient.utils.BluetoothReceiver
 import com.github.nthily.swsclient.utils.Utils
+import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -31,23 +32,35 @@ class AppViewModel(
     val bthDevice = bthAdapter?.name
     val pairedDevices = mutableStateListOf<BluetoothDevice>()
     val scannedDevices = mutableStateListOf<BluetoothDevice>()
+
     var bthReady = mutableStateOf(false)
     var bthEnabled = mutableStateOf(false)
     var bthDiscovering = mutableStateOf(false)
+    var selectedPairedDevice = mutableStateOf<BluetoothDevice?>(null)
 
     private val bluetoothReceiver = BluetoothReceiver(
-        onDeviceStateChanged = { requestCode, device ->
+        onDeviceBondStateChanged = { requestCode, device ->
+            Utils.log("设备 ${device.name} 状态是 ${device.bondState}")
             when(requestCode) {
-                BluetoothDevice.BOND_NONE -> pairedDevices.remove(device)
+                BluetoothDevice.BOND_NONE -> {
+                    Utils.log("设备 ${device.name} 取消绑定了")
+                    pairedDevices.remove(device)
+                }
                 BluetoothDevice.BOND_BONDED -> {
                     pairedDevices.add(device)
-                    if(scannedDevices.contains(device)) scannedDevices.remove(device)
+                    scannedDevices.remove(device)
+                }
+                BluetoothDevice.BOND_BONDING -> {
+                    Utils.log("设备正在绑定")
                 }
             }
         },
         onDiscoveryStarted = { bthDiscovering.value = true },
         onDiscoveryFinished = { bthDiscovering.value = false },
         onFoundDevice = {
+
+            // sort device from a -> z, not null -> null
+
             if(!pairedDevices.contains(it) && !scannedDevices.contains(it)) {
                 if(scannedDevices.isEmpty()) scannedDevices.add(it)
                 else {
@@ -86,6 +99,8 @@ class AppViewModel(
                 addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
                 addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
                 addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
+                addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
+                addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
             }
         )
 
@@ -121,19 +136,19 @@ class AppViewModel(
         bthAdapter?.cancelDiscovery()
     }
 
-    fun pairBlueToothDevice(device: BluetoothDevice) {
-        val pair = device.javaClass.getMethod("createBond")
-        pair.invoke(device)
-    }
+    fun bondBluetoothDevice(device: BluetoothDevice) { device.createBond() }
+
+    fun unBondBluetoothDevice(device: BluetoothDevice) { device.javaClass.getMethod("removeBond").invoke(device) }
 
     fun connectBluetoothDevice(device: BluetoothDevice) {
         Utils.log("开始连接")
         if(bthDiscovering.value) stopDeviceScan()
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                //val mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID))
-                val mBluetoothSocket = device::class.java.getMethod("createRfcommSocket", Int::class.java)
-                mBluetoothSocket.invoke(device, 5)
+                val mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID))
+
+                mBluetoothSocket.connect()
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
