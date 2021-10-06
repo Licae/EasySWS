@@ -1,2 +1,2 @@
-# EasySWS
+# EasySWS (In development)
 Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Assetto Corsa Competizione
