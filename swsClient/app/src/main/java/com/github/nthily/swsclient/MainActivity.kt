@@ -283,13 +283,14 @@ fun PairedDevices(
             color = Color.White,
             elevation = 5.dp
         ){
-            Column {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onClickPairedDevice(item) }
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .clickable {
-                            onClickPairedDevice(item)
-                        }
                         .padding(10.dp)
                 ) {
                     GetDeviceIcon(item)
@@ -315,10 +316,10 @@ fun PairedDevices(
                         )
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Green)
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xFF0079D3),
+                    progress = 1f
                 )
             }
         }
