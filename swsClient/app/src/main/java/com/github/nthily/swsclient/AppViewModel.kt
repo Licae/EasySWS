@@ -27,7 +27,8 @@ class AppViewModel(
     private val bthManager = app.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
     private val bthAdapter: BluetoothAdapter? = bthManager.adapter
 
-    private val MY_UUID = "00001101-0000-1000-8000-00805F9B34FB"
+    private val uuid = "00001101-0000-1000-8000-00805F9B34FB"
+    private var isBondingAnyDevice = false
 
     val bthDevice = bthAdapter?.name
     val pairedDevices = mutableStateListOf<BluetoothDevice>()
@@ -39,19 +40,31 @@ class AppViewModel(
     var selectedPairedDevice = mutableStateOf<BluetoothDevice?>(null)
 
     private val bluetoothReceiver = BluetoothReceiver(
-        onDeviceBondStateChanged = { requestCode, device ->
+        onDeviceBondStateChanged = { device, state, prevState ->
             Utils.log("设备 ${device.name} 状态是 ${device.bondState}")
-            when(requestCode) {
+            when(state) {
                 BluetoothDevice.BOND_NONE -> {
-                    Utils.log("设备 ${device.name} 取消绑定了")
-                    pairedDevices.remove(device)
+                    Utils.log("test: $prevState")
+                    if(prevState == BluetoothDevice.BOND_BONDING) {
+                       // recompose
+                        scannedDevices.remove(device)
+                        scannedDevices.add(device)
+                        isBondingAnyDevice = false
+                    } else {
+                        pairedDevices.remove(device)
+                    }
                 }
                 BluetoothDevice.BOND_BONDED -> {
                     pairedDevices.add(device)
                     scannedDevices.remove(device)
+                    isBondingAnyDevice = false
                 }
                 BluetoothDevice.BOND_BONDING -> {
                     Utils.log("设备正在绑定")
+
+                    // recompose
+                    scannedDevices.remove(device)
+                    scannedDevices.add(0, device)
                 }
             }
         },
@@ -136,16 +149,19 @@ class AppViewModel(
         bthAdapter?.cancelDiscovery()
     }
 
-    fun bondBluetoothDevice(device: BluetoothDevice) { device.createBond() }
-
-    fun unBondBluetoothDevice(device: BluetoothDevice) { device.javaClass.getMethod("removeBond").invoke(device) }
+    fun bondDevice(device: BluetoothDevice) {
+        if(!isBondingAnyDevice) {
+            device.createBond()
+            isBondingAnyDevice = true
+        }
+    }
 
     fun connectBluetoothDevice(device: BluetoothDevice) {
         Utils.log("开始连接")
         if(bthDiscovering.value) stopDeviceScan()
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID))
+                val mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid))
 
                 mBluetoothSocket.connect()
 
@@ -154,4 +170,8 @@ class AppViewModel(
             }
         }
     }
+}
+
+fun BluetoothDevice.removeBond() {
+    this.javaClass.getMethod("removeBond").invoke(this)
 }

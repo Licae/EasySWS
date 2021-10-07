@@ -5,7 +5,6 @@ import android.app.Application
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -24,11 +23,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.BottomSheetState
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ExperimentalMaterialApi
@@ -63,7 +60,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.github.nthily.swsclient.ui.theme.SwsClientTheme
 import com.github.nthily.swsclient.utils.SecondaryText
-import com.github.nthily.swsclient.utils.Utils
 import kotlinx.coroutines.launch
 
 class SwsclientApp: Application() {
@@ -107,8 +103,7 @@ class MainActivity : ComponentActivity() {
                         SheetContent(
                             device = selectedDevice,
                             sheetState = sheetState,
-                            connectDevice = { appViewModel.connectBluetoothDevice(it) },
-                            unBondDevice = { appViewModel.unBondBluetoothDevice(it) }
+                            connectDevice = { appViewModel.connectBluetoothDevice(it) }
                         )
                     }
                 ) {
@@ -259,7 +254,7 @@ fun BthDeviceList(
                 )
 
             ScannedDevices(scannedDevices) {
-                appViewModel.bondBluetoothDevice(it)
+                appViewModel.bondDevice(it)
             }
         }
     }
@@ -346,25 +341,40 @@ fun ScannedDevices(
             color = Color.White,
             elevation = 5.dp
         ){
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .clickable { pairBluetoothDevice(item) }
-                    .padding(10.dp)
             ) {
-                GetDeviceIcon(item)
-                Spacer(modifier = Modifier.padding(horizontal = 5.dp))
-                Column {
-                    item.name?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.h6
-                        )
-                    }
-                    item.address?.let {
-                        SecondaryText(it)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(10.dp)
+                ) {
+                    GetDeviceIcon(item)
+                    Spacer(modifier = Modifier.padding(horizontal = 5.dp))
+                    Column {
+                        item.name?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.h6
+                            )
+                        }
+                        item.address?.let {
+                            SecondaryText(it)
+                        }
                     }
                 }
+                if(item.bondState != BluetoothDevice.BOND_BONDING) {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color(0xFF0079D3),
+                        progress = when(item.bondState) {
+                            BluetoothDevice.BOND_NONE -> 0f
+                            else -> 1f
+                        }
+                    )
+                } else LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = Color(0xFF0079D3))
             }
         }
     }
@@ -375,8 +385,7 @@ fun ScannedDevices(
 fun SheetContent(
     device: BluetoothDevice?,
     sheetState: ModalBottomSheetState,
-    connectDevice: (device: BluetoothDevice) -> Unit,
-    unBondDevice: (device: BluetoothDevice) -> Unit
+    connectDevice: (device: BluetoothDevice) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     Column(
@@ -412,7 +421,7 @@ fun SheetContent(
         Button(
             onClick = {
                   device?.let {
-                      unBondDevice(it)
+                      it.removeBond()
                       scope.launch {
                           sheetState.hide()
                       }
