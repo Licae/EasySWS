@@ -95,7 +95,10 @@ class AppViewModel(
                 }
             }
         },
-        onConnect = { bthEnabled.value = true },
+        onConnect = {
+            getBondedDevices()
+            bthEnabled.value = true
+        },
         onDisconnect = { bthEnabled.value = false }
     )
 
@@ -120,9 +123,7 @@ class AppViewModel(
         if(bthAdapter != null) {
             bthReady.value = true
             bthEnabled.value = bthAdapter.isEnabled
-            bthAdapter.bondedDevices.forEach {
-                pairedDevices.add(it)
-            }
+            getBondedDevices()
         }
     }
 
@@ -130,6 +131,12 @@ class AppViewModel(
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         app.unregisterReceiver(bluetoothReceiver)
+    }
+
+    private fun getBondedDevices() {
+        bthAdapter!!.bondedDevices.forEach {
+            if(!pairedDevices.contains(it)) pairedDevices.add(it)
+        }
     }
 
     fun enableBluetooth() {
