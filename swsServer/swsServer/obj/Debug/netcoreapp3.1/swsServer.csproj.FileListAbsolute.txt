@@ -1,0 +1,17 @@
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\swsServer.exe
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\swsServer.deps.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\swsServer.runtimeconfig.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\swsServer.runtimeconfig.dev.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\swsServer.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\swsServer.pdb
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\netcoreapp3.1\swsServer.csproj.AssemblyReference.cache
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\netcoreapp3.1\swsServer.AssemblyInfoInputs.cache
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\netcoreapp3.1\swsServer.AssemblyInfo.cs
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\netcoreapp3.1\swsServer.csproj.CoreCompileInputs.cache
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\netcoreapp3.1\swsServer.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\netcoreapp3.1\swsServer.pdb
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\netcoreapp3.1\swsServer.genruntimeconfig.cache
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\InTheHand.Net.Bluetooth.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.1\InTheHand.Net.Bluetooth.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\netcoreapp3.1\swsServer.csproj.CopyComplete
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Debug\netcoreapp3.1\vJoyInterfaceWrap.dll

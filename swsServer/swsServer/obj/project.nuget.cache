@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "tuo4f5pFNOw4OyeMKNd9koryzYPt5HAp7EIzYEjp3bWVEZ+Bgo9+HgRE+W//XZmfgLvm+dUdyFPh+i85k6Sj1Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Anteayer\\Desktop\\EasySWS\\swsServer\\swsServer\\swsServer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Anteayer\\.nuget\\packages\\inthehand.net.bluetooth\\4.0.21\\inthehand.net.bluetooth.4.0.21.nupkg.sha512"
+  ],
+  "logs": []
+}

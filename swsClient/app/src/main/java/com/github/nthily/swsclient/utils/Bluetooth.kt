@@ -15,8 +15,9 @@ class BluetoothReceiver(
     private val onDiscoveryStarted: () -> Unit,
     private val onDiscoveryFinished: () -> Unit,
     private val onFoundDevice: (device: BluetoothDevice) -> Unit,
-    private val onConnect: () -> Unit,
-    private val onDisconnect: () -> Unit
+    private val onBluetoothConnected: () -> Unit,
+    private val onBluetoothDisconnected: () -> Unit,
+    private val onAnyBluetoothDeviceConnectionStateChanged: (state: Boolean) -> Unit
 ): BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -41,18 +42,14 @@ class BluetoothReceiver(
             BluetoothAdapter.ACTION_DISCOVERY_STARTED -> onDiscoveryStarted()
             BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> onDiscoveryFinished()
             BluetoothAdapter.ACTION_STATE_CHANGED -> {
-                val requestCode = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
-                if(requestCode == BluetoothAdapter.STATE_OFF) onDisconnect() else onConnect()
+                val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
+                if(state == BluetoothAdapter.STATE_OFF) onBluetoothDisconnected() else onBluetoothConnected()
             }
             BluetoothDevice.ACTION_ACL_CONNECTED -> {
-                val device: BluetoothDevice? =
-                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                Utils.log("设备 ${device?.name} 连接了")
+                onAnyBluetoothDeviceConnectionStateChanged(true)
             }
             BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
-                val device: BluetoothDevice? =
-                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                Utils.log("设备 ${device?.name} 断连了")
+                onAnyBluetoothDeviceConnectionStateChanged(false)
             }
         }
     }

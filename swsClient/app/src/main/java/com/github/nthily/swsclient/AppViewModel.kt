@@ -26,6 +26,7 @@ class AppViewModel(
 
     private val bthManager = app.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
     private val bthAdapter: BluetoothAdapter? = bthManager.adapter
+    private var bthDeviceConnectState = mutableStateOf(false)
 
     private val uuid = "00001101-0000-1000-8000-00805F9B34FB"
     private var isBondingAnyDevice = false
@@ -95,11 +96,12 @@ class AppViewModel(
                 }
             }
         },
-        onConnect = {
+        onBluetoothConnected = {
             getBondedDevices()
             bthEnabled.value = true
         },
-        onDisconnect = { bthEnabled.value = false }
+        onBluetoothDisconnected = { bthEnabled.value = false },
+        onAnyBluetoothDeviceConnectionStateChanged = { bthDeviceConnectState.value = it }
     )
 
     // MainActivity
@@ -163,17 +165,23 @@ class AppViewModel(
         }
     }
 
-    fun connectBluetoothDevice(device: BluetoothDevice) {
+    fun connectDevice(device: BluetoothDevice) {
         Utils.log("开始连接")
         if(bthDiscovering.value) stopDeviceScan()
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid))
-
                 mBluetoothSocket.connect()
 
+                if(bthDeviceConnectState.value) {
+                    val os = mBluetoothSocket.outputStream
+                    val str = "设备 ${device.name} 已经连接啦啦啦".encodeToByteArray()
+                    os.write(str)
+                    os.flush()
+                }
+
             } catch (e: Exception) {
-                e.printStackTrace()
+                Utils.log("与远程服务端断开连接")
             }
         }
     }

@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
                         SheetContent(
                             device = selectedDevice,
                             sheetState = sheetState,
-                            connectDevice = { appViewModel.connectBluetoothDevice(it) }
+                            connectDevice = { appViewModel.connectDevice(it) }
                         )
                     }
                 ) {
