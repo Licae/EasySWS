@@ -13,10 +13,10 @@ namespace swsServer
         {
 
             Guid UUID = new Guid("00001101-0000-1000-8000-00805F9B34FB");
-            BluetoothClient bluetoothClient = new BluetoothClient();
-            BluetoothRadio bluetoothRadio = BluetoothRadio.Default;
-            BluetoothListener bluetoothListener = new BluetoothListener(UUID);
-            vjoyUtils.Init();
+            var bluetoothClient = new BluetoothClient();
+            var bluetoothRadio = BluetoothRadio.Default;
+            var bluetoothListener = new BluetoothListener(UUID);
+            Joystick.Init();
 
             if(bluetoothRadio != null)
             {
@@ -26,7 +26,7 @@ namespace swsServer
                 {
                     bluetoothClient = bluetoothListener.AcceptBluetoothClient();
                     Console.WriteLine($"{bluetoothClient.RemoteMachineName} 已经连接");
-                    Stream mStream = bluetoothClient.GetStream();
+                    var mStream = bluetoothClient.GetStream();
                     while (bluetoothClient.Client.Connected)
                     {
                         try

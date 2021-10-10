@@ -4,9 +4,9 @@ using vJoyInterfaceWrap;
 
 namespace swsServer
 {
-    static class vjoyUtils
+    static class Joystick
     {
-        static vJoy joystick = new vJoy();
+        static vJoy joystick = new ();
         static public void Init()
         {
 
