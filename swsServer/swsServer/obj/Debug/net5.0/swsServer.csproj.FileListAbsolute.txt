@@ -13,7 +13,6 @@ C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.AssemblyInfoInputs.cache
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.AssemblyInfo.cs
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.csproj.CoreCompileInputs.cache
-C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.csproj.CopyComplete
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.dll
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\ref\swsServer.dll
 C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\obj\Debug\net5.0\swsServer.pdb

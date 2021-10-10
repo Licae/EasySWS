@@ -4,8 +4,11 @@ import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothSocket
 import android.content.Context.BLUETOOTH_SERVICE
 import android.content.IntentFilter
+import android.os.Handler
+import android.os.HandlerThread
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -14,6 +17,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.nthily.swsclient.utils.BluetoothReceiver
 import com.github.nthily.swsclient.utils.Utils
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,6 +33,7 @@ class AppViewModel(
     private val bthManager = app.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
     private val bthAdapter: BluetoothAdapter? = bthManager.adapter
     private var bthDeviceConnectState = mutableStateOf(false)
+    private lateinit var mBluetoothSocket: BluetoothSocket
 
     private val uuid = "00001101-0000-1000-8000-00805F9B34FB"
     private var isBondingAnyDevice = false
@@ -167,10 +174,12 @@ class AppViewModel(
 
     fun connectDevice(device: BluetoothDevice) {
         Utils.log("开始连接")
+        mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid))
+        val mBuffer = ByteArray(1024)
+
         if(bthDiscovering.value) stopDeviceScan()
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid))
                 mBluetoothSocket.connect()
 
                 if(bthDeviceConnectState.value) {
@@ -180,8 +189,17 @@ class AppViewModel(
                     os.flush()
                 }
 
+                viewModelScope.launch(Dispatchers.IO) {
+
+                    while(true) {
+                        val msgBytes = mBluetoothSocket.inputStream
+                        val msg = mBuffer.decodeToString(endIndex = msgBytes.read(mBuffer))
+                        Utils.log("接收到 $msg")
+                    }
+                }
+
             } catch (e: Exception) {
-                Utils.log("与远程服务端断开连接")
+                Utils.log("远程服务端断开连接\n ${e.printStackTrace()}")
             }
         }
     }

@@ -8,7 +8,6 @@ namespace swsServer
 {
     class Program
     {
-
         static void Main(string[] args)
         {
 
@@ -27,12 +26,15 @@ namespace swsServer
                     bluetoothClient = bluetoothListener.AcceptBluetoothClient();
                     Console.WriteLine($"{bluetoothClient.RemoteMachineName} 已经连接");
                     var mStream = bluetoothClient.GetStream();
+                    mStream.Write(Encoding.UTF8.GetBytes("connectedddddddddddddddd\ndddddddddddddddd"));
+
                     while (bluetoothClient.Client.Connected)
                     {
                         try
                         {
                             byte[] received = new byte[1024];
                             var resultCode = mStream.Read(received, 0, received.Length);
+
                             if (resultCode == 0)
                             {
                                 throw new IOException();
@@ -43,9 +45,9 @@ namespace swsServer
                                 Console.WriteLine($"服务器端接收到消息:{receivedString}");
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            Console.WriteLine($"设备 {bluetoothClient.RemoteMachineName} 已断开连接");
+                            Console.WriteLine($"设备 {bluetoothClient.RemoteMachineName} 已断开连接\n {ex.ToString()}");
                             break;
                         }
                     }
