@@ -10,11 +10,11 @@ namespace swsServer
     {
         static void Main(string[] args)
         {
-
-            Guid UUID = new Guid("00001101-0000-1000-8000-00805F9B34FB");
+            var UUID = new Guid("00001101-0000-1000-8000-00805F9B34FB");
             var bluetoothClient = new BluetoothClient();
             var bluetoothRadio = BluetoothRadio.Default;
             var bluetoothListener = new BluetoothListener(UUID);
+
             Joystick.Init();
 
             if(bluetoothRadio != null)
@@ -26,7 +26,10 @@ namespace swsServer
                     bluetoothClient = bluetoothListener.AcceptBluetoothClient();
                     Console.WriteLine($"{bluetoothClient.RemoteMachineName} 已经连接");
                     var mStream = bluetoothClient.GetStream();
-                    mStream.Write(Encoding.UTF8.GetBytes("connectedddddddddddddddd\ndddddddddddddddd"));
+                    mStream.Write(Encoding.UTF8.GetBytes("connected"));
+
+
+
 
                     while (bluetoothClient.Client.Connected)
                     {
@@ -58,9 +61,8 @@ namespace swsServer
 
         static public void getDeviceInfo(BluetoothRadio bluetoothRadio, BluetoothClient bluetoothClient)
         {
-            Console.WriteLine($"name is {bluetoothRadio.Name}\n" +
-                $"address is {bluetoothRadio.LocalAddress}\n" +
-                $"Mode is {bluetoothRadio.Mode}");
+            Console.WriteLine($"本机蓝牙名称： {bluetoothRadio.Name}\n" +
+                $"Mac 地址：{bluetoothRadio.LocalAddress}\n");
 
             Console.WriteLine("\n");
 

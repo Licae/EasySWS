@@ -1,4 +1,4 @@
-package com.github.nthily.swsclient
+package com.github.nthily.swsclient.viewModel
 
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
@@ -15,6 +15,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.github.nthily.swsclient.utils.BluetoothReceiver
 import com.github.nthily.swsclient.utils.Utils
 import java.io.BufferedReader
@@ -32,8 +33,6 @@ class AppViewModel(
 
     private val bthManager = app.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
     private val bthAdapter: BluetoothAdapter? = bthManager.adapter
-    private var bthDeviceConnectState = mutableStateOf(false)
-    private lateinit var mBluetoothSocket: BluetoothSocket
 
     private val uuid = "00001101-0000-1000-8000-00805F9B34FB"
     private var isBondingAnyDevice = false
@@ -42,9 +41,13 @@ class AppViewModel(
     val pairedDevices = mutableStateListOf<BluetoothDevice>()
     val scannedDevices = mutableStateListOf<BluetoothDevice>()
 
+    lateinit var mBluetoothSocket: BluetoothSocket
     var bthReady = mutableStateOf(false)
     var bthEnabled = mutableStateOf(false)
     var bthDiscovering = mutableStateOf(false)
+    var bthDeviceConnectState = mutableStateOf(false)
+
+
     var selectedPairedDevice = mutableStateOf<BluetoothDevice?>(null)
 
     private val bluetoothReceiver = BluetoothReceiver(
@@ -172,7 +175,7 @@ class AppViewModel(
         }
     }
 
-    fun connectDevice(device: BluetoothDevice) {
+    fun connectDevice(device: BluetoothDevice, navController: NavHostController) {
         Utils.log("开始连接")
         mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid))
         val mBuffer = ByteArray(1024)
@@ -190,16 +193,24 @@ class AppViewModel(
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
-
-                    while(true) {
-                        val msgBytes = mBluetoothSocket.inputStream
-                        val msg = mBuffer.decodeToString(endIndex = msgBytes.read(mBuffer))
-                        Utils.log("接收到 $msg")
+                    try {
+                        while(true) {
+                            val msgBytes = mBluetoothSocket.inputStream
+                            val msg = mBuffer.decodeToString(endIndex = msgBytes.read(mBuffer))
+                            Utils.log("接收到 $msg")
+                            if(msg == "connected") {
+                                viewModelScope.launch {
+                                    navController.navigate("controller")
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Utils.log("${e.printStackTrace()}")
+                        viewModelScope.launch { navController.popBackStack() }
                     }
                 }
-
             } catch (e: Exception) {
-                Utils.log("远程服务端断开连接\n ${e.printStackTrace()}")
+                Utils.log("服务端未开启\n ${e.printStackTrace()}")
             }
         }
     }

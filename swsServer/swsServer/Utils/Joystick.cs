@@ -45,11 +45,8 @@ namespace swsServer
                 }
             }
             else
-            {    
-                Console.WriteLine("Vendor: {0}\nProduct :{1}\nVersion Number:{2}\n",
-                joystick.GetvJoyManufacturerString(),
-                joystick.GetvJoyProductString(),
-                joystick.GetvJoySerialNumberString());
+            {
+                Console.WriteLine($"vJoy 驱动正在运行！vJoy 版本: {joystick.GetvJoyVersion()}\n");
             }
         }
     }

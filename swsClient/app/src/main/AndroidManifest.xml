@@ -15,12 +15,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".SwsclientApp"
+        android:name=".page.main.SwsclientApp"
         android:theme="@style/Theme.SwsClient">
         <activity
-            android:name=".MainActivity"
+            android:name=".page.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.SwsClient">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,10 +1,11 @@
-package com.github.nthily.swsclient
+package com.github.nthily.swsclient.page.main
 
 import android.Manifest
 import android.app.Application
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -13,6 +14,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -58,9 +60,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.github.nthily.swsclient.R
 import com.github.nthily.swsclient.ui.theme.SwsClientTheme
 import com.github.nthily.swsclient.utils.SecondaryText
+import com.github.nthily.swsclient.viewModel.AppViewModel
+import com.github.nthily.swsclient.viewModel.removeBond
 import kotlinx.coroutines.launch
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.navigation.NavHostController
+import com.github.nthily.swsclient.page.controller.Controller
 
 class SwsclientApp: Application() {
     override fun onCreate() {
@@ -81,6 +92,9 @@ class SwsclientApp: Application() {
 class MainActivity : ComponentActivity() {
 
     private val appViewModel by viewModels<AppViewModel>()
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    @ExperimentalComposeUiApi
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,87 +104,105 @@ class MainActivity : ComponentActivity() {
         setContent {
             SwsClientTheme {
 
-                val bthReady by remember { appViewModel.bthReady }
-                val bthEnabled by remember { appViewModel.bthEnabled }
-                val selectedDevice by remember { appViewModel.selectedPairedDevice }
+                val navController = rememberNavController()
 
-                val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-
-
-                ModalBottomSheetLayout(
-                    sheetState = sheetState,
-                    sheetContent = {
-                        SheetContent(
-                            device = selectedDevice,
-                            sheetState = sheetState,
-                            connectDevice = { appViewModel.connectDevice(it) }
-                        )
+                NavHost(navController = navController, startDestination = "main") {
+                    composable("main") {
+                        Main(appViewModel, navController)
                     }
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color(0xFFF8F8F8))
-                            .padding(top = 48.dp, start = 14.dp, end = 14.dp)
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        if(bthReady) {
-                            Column {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = "设备名称",
-                                        fontWeight = FontWeight.Bold,
-                                        style = MaterialTheme.typography.h6
-                                    )
-                                    Box(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        contentAlignment = Alignment.CenterEnd
-                                    ) {
-                                        appViewModel.bthDevice?.let {
-                                            Text(
-                                                text = it,
-                                                fontWeight = FontWeight.Bold,
-                                                style = MaterialTheme.typography.h6
-                                            )
-                                        }
-                                    }
-                                }
-                                Spacer(Modifier.padding(vertical = 8.dp))
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = "开启蓝牙",
-                                        fontWeight = FontWeight.Bold,
-                                        style = MaterialTheme.typography.h6
-                                    )
-                                    Box(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        contentAlignment = Alignment.CenterEnd
-                                    ) {
-                                        Switch(
-                                            checked = bthEnabled,
-                                            onCheckedChange = {
-                                                if(bthEnabled)
-                                                    appViewModel.disableBluetooth()
-                                                else
-                                                    appViewModel.enableBluetooth()
-                                            },
-                                            colors = SwitchDefaults.colors(
-                                                checkedTrackColor = Color(0xFF0079D3),
-                                                checkedThumbColor = Color(0xFF0079D3)
-                                            )
-                                        )
-                                    }
-                                }
+                    composable("controller") {
+                        Controller(appViewModel)
+                    }
+                }
+            }
+        }
+    }
+}
 
-                                Spacer(Modifier.padding(vertical = 8.dp))
-                                BthDeviceList(appViewModel, sheetState)
+@ExperimentalMaterialApi
+@Composable
+fun Main(
+    appViewModel: AppViewModel,
+    navController: NavHostController
+) {
+
+    val bthReady by remember { appViewModel.bthReady }
+    val bthEnabled by remember { appViewModel.bthEnabled }
+    val selectedDevice by remember { appViewModel.selectedPairedDevice }
+
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetContent = {
+            SheetContent(
+                device = selectedDevice,
+                sheetState = sheetState,
+                connectDevice = { appViewModel.connectDevice(it, navController) }
+            )
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF8F8F8))
+                .padding(top = 48.dp, start = 14.dp, end = 14.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            if(bthReady) {
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "设备名称",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.h6
+                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            appViewModel.bthDevice?.let {
+                                Text(
+                                    text = it,
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.h6
+                                )
                             }
                         }
                     }
+                    Spacer(Modifier.padding(vertical = 8.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "开启蓝牙",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.h6
+                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            Switch(
+                                checked = bthEnabled,
+                                onCheckedChange = {
+                                    if(bthEnabled)
+                                        appViewModel.disableBluetooth()
+                                    else
+                                        appViewModel.enableBluetooth()
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedTrackColor = Color(0xFF0079D3),
+                                    checkedThumbColor = Color(0xFF0079D3)
+                                )
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.padding(vertical = 8.dp))
+                    BthDeviceList(appViewModel, sheetState)
                 }
             }
         }
@@ -181,7 +213,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BthDeviceList(
     appViewModel: AppViewModel,
-    sheetState: ModalBottomSheetState,
+    sheetState: ModalBottomSheetState
 ) {
     val context = LocalContext.current
     val pairedDevices = remember { appViewModel.pairedDevices }
