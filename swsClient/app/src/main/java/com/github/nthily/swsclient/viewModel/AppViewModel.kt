@@ -9,12 +9,14 @@ import android.content.Context.BLUETOOTH_SERVICE
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.HandlerThread
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.github.nthily.swsclient.utils.BluetoothReceiver
 import com.github.nthily.swsclient.utils.Utils
@@ -176,25 +178,23 @@ class AppViewModel(
     }
 
     fun connectDevice(device: BluetoothDevice, navController: NavHostController) {
-        Utils.log("开始连接")
-        mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid))
         val mBuffer = ByteArray(1024)
-
         if(bthDiscovering.value) stopDeviceScan()
+        mBluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid))
+
         viewModelScope.launch(Dispatchers.IO) {
+
             try {
                 mBluetoothSocket.connect()
 
-                if(bthDeviceConnectState.value) {
-                    val os = mBluetoothSocket.outputStream
-                    val str = "设备 ${device.name} 已经连接啦啦啦".encodeToByteArray()
-                    os.write(str)
-                    os.flush()
-                }
+                val os = mBluetoothSocket.outputStream
+                val str = "设备 ${device.name} 已经连接啦啦啦".encodeToByteArray()
+                os.write(str)
+                os.flush()
 
                 viewModelScope.launch(Dispatchers.IO) {
                     try {
-                        while(true) {
+                        while (true) {
                             val msgBytes = mBluetoothSocket.inputStream
                             val msg = mBuffer.decodeToString(endIndex = msgBytes.read(mBuffer))
                             Utils.log("接收到 $msg")
@@ -205,12 +205,13 @@ class AppViewModel(
                             }
                         }
                     } catch (e: Exception) {
-                        Utils.log("${e.printStackTrace()}")
                         viewModelScope.launch { navController.popBackStack() }
                     }
                 }
+
             } catch (e: Exception) {
                 Utils.log("服务端未开启\n ${e.printStackTrace()}")
+                viewModelScope.launch { Toast.makeText(app.applicationContext, "无法连接", Toast.LENGTH_LONG).show() }
             }
         }
     }

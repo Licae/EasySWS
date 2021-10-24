@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
                         Main(appViewModel, navController)
                     }
                     composable("controller") {
-                        Controller(appViewModel)
+                        Controller(appViewModel, navController)
                     }
                 }
             }

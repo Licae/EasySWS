@@ -2,6 +2,7 @@ package com.github.nthily.swsclient.page.controller
 
 import android.content.pm.ActivityInfo
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -19,18 +20,25 @@ import com.github.nthily.swsclient.utils.ComposeVerticalSlider
 import com.github.nthily.swsclient.utils.ShiftButton
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import com.github.nthily.swsclient.utils.Utils
 import com.github.nthily.swsclient.utils.Utils.findActivity
 import com.github.nthily.swsclient.utils.rememberComposeVerticalSliderState
 import com.github.nthily.swsclient.viewModel.AppViewModel
+import java.lang.Exception
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalComposeUiApi
 @Composable
-fun Controller(appViewModel: AppViewModel) {
+fun Controller(
+    appViewModel: AppViewModel,
+    navController: NavController
+) {
 
     val brakeState = rememberComposeVerticalSliderState()
     val throttleState = rememberComposeVerticalSliderState()
     val context = LocalContext.current
+
 
     DisposableEffect(Unit) {
         val activity = context.findActivity() ?: return@DisposableEffect onDispose { }
@@ -85,4 +93,11 @@ fun Controller(appViewModel: AppViewModel) {
 
         }
     }
+
+    BackHandler(
+        enabled = navController.currentBackStackEntry?.destination?.route == "controller"
+    ) {
+        appViewModel.mBluetoothSocket.close()
+    }
+
 }
