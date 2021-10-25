@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.github.nthily.swsclient.utils.BluetoothReceiver
+import com.github.nthily.swsclient.utils.Sender
 import com.github.nthily.swsclient.utils.Utils
 import java.io.BufferedReader
 import java.io.InputStream
@@ -187,19 +188,12 @@ class AppViewModel(
             try {
                 mBluetoothSocket.connect()
 
-                val os = mBluetoothSocket.outputStream
-                val str = "设备 ${device.name} 已经连接啦啦啦".encodeToByteArray()
-                os.write(str)
-                os.flush()
-
                 viewModelScope.launch(Dispatchers.IO) {
                     try {
                         while (true) {
                             val msgBytes = mBluetoothSocket.inputStream
                             val msg = mBuffer.decodeToString(endIndex = msgBytes.read(mBuffer))
-                            if(msg == "connected") {
-                                viewModelScope.launch { navController.navigate("console") }
-                            }
+                            if(msg == "connected") { viewModelScope.launch { navController.navigate("console") } }
                         }
                     } catch (e: Exception) {
                         viewModelScope.launch { navController.popBackStack() }

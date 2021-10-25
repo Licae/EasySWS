@@ -18,7 +18,7 @@ import com.github.nthily.swsclient.ui.view.ComposeVerticalSlider
 import com.github.nthily.swsclient.ui.view.DownShiftButton
 import com.github.nthily.swsclient.ui.view.UpShiftButton
 import com.github.nthily.swsclient.ui.view.rememberComposeVerticalSliderState
-import com.github.nthily.swsclient.utils.Joystick
+import com.github.nthily.swsclient.utils.Sender
 import com.github.nthily.swsclient.utils.Utils.findActivity
 import com.github.nthily.swsclient.viewModel.AppViewModel
 import kotlinx.coroutines.Dispatchers
@@ -69,17 +69,17 @@ fun Console(
         Spacer(Modifier.padding(horizontal = 10.dp))
         UpShiftButton {
             scope.launch(Dispatchers.IO) {
-                os.write(Joystick.sendUpShiftButtonsData(true))
-                delay(100)
-                os.write(Joystick.sendUpShiftButtonsData(false))
+                os.write(Sender.sendUpShiftButtonsData(true))
+                delay(150)
+                os.write(Sender.sendUpShiftButtonsData(false))
             }
         }
         Spacer(Modifier.padding(horizontal = 60.dp))
         DownShiftButton {
             scope.launch(Dispatchers.IO) {
-                os.write(Joystick.sendDownShiftButtonsData(true))
-                delay(100)
-                os.write(Joystick.sendDownShiftButtonsData(false))
+                os.write(Sender.sendDownShiftButtonsData(true))
+                delay(150)
+                os.write(Sender.sendDownShiftButtonsData(false))
             }
         }
         Spacer(Modifier.padding(horizontal = 10.dp))
