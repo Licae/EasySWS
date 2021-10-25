@@ -40,6 +40,7 @@ class AppViewModel(
     lateinit var mBluetoothSocket: BluetoothSocket
     var bthReady = mutableStateOf(false)
     var bthEnabled = mutableStateOf(false)
+    var showMacAddress = mutableStateOf(false)
     var bthDiscovering = mutableStateOf(false)
     var bthDeviceConnectState = mutableStateOf(false)
 

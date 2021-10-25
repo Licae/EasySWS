@@ -14,6 +14,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -115,6 +116,7 @@ fun Main(
 
     val bthReady by remember { appViewModel.bthReady }
     val bthEnabled by remember { appViewModel.bthEnabled }
+    val macAddress by remember { appViewModel.showMacAddress }
     val selectedDevice by remember { appViewModel.selectedPairedDevice }
 
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -189,6 +191,31 @@ fun Main(
                     }
 
                     Spacer(Modifier.padding(vertical = 8.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "显示 MAC 地址",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.h6
+                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            Switch(
+                                checked = macAddress,
+                                onCheckedChange = {
+                                      appViewModel.showMacAddress.value = it
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedTrackColor = Color(0xFF0079D3),
+                                    checkedThumbColor = Color(0xFF0079D3)
+                                )
+                            )
+                        }
+                    }
+                    Spacer(Modifier.padding(vertical = 8.dp))
                     BthDeviceList(appViewModel, sheetState)
                 }
             }
@@ -226,7 +253,8 @@ fun BthDeviceList(
                         scope.launch {
                             sheetState.show()
                         }
-                    }
+                    },
+                    appViewModel.showMacAddress.value
                 )
             }
             Row(
@@ -272,9 +300,11 @@ fun BthDeviceList(
                     color = Color(0xFF0079D3)
                 )
 
-            ScannedDevices(scannedDevices) {
-                appViewModel.bondDevice(it)
-            }
+            ScannedDevices(
+                scannedDevices = scannedDevices,
+                { appViewModel.bondDevice(it) },
+                appViewModel.showMacAddress.value
+            )
         }
     }
 }
@@ -283,7 +313,8 @@ fun BthDeviceList(
 @Composable
 fun PairedDevices(
     pairedDevices: SnapshotStateList<BluetoothDevice>,
-    onClickPairedDevice: (selectedDevice: BluetoothDevice) -> Unit
+    onClickPairedDevice: (selectedDevice: BluetoothDevice) -> Unit,
+    displayMacAddress: Boolean
 ) {
 
     Text(
@@ -306,6 +337,7 @@ fun PairedDevices(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClickPairedDevice(item) }
+                    .animateContentSize()
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -321,8 +353,10 @@ fun PairedDevices(
                                 style = MaterialTheme.typography.h6
                             )
                         }
-                        item.address?.let {
-                            SecondaryText(it)
+                        if(displayMacAddress) {
+                            item.address?.let {
+                                SecondaryText(it)
+                            }
                         }
                     }
                     Box(
@@ -349,7 +383,8 @@ fun PairedDevices(
 @Composable
 fun ScannedDevices(
     scannedDevices: SnapshotStateList<BluetoothDevice>,
-    pairBluetoothDevice: (device: BluetoothDevice) -> Unit
+    pairBluetoothDevice: (device: BluetoothDevice) -> Unit,
+    displayMacAddress: Boolean
 ) {
     scannedDevices.forEach { item ->
         Spacer(Modifier.padding(vertical = 5.dp))
@@ -365,6 +400,7 @@ fun ScannedDevices(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { pairBluetoothDevice(item) }
+                    .animateContentSize()
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -380,8 +416,14 @@ fun ScannedDevices(
                                 style = MaterialTheme.typography.h6
                             )
                         }
-                        item.address?.let {
-                            SecondaryText(it)
+                        if(item.name == null) {
+                            item.address?.let {
+                                SecondaryText(it)
+                            }
+                        } else if(displayMacAddress) {
+                            item.address?.let {
+                                SecondaryText(it)
+                            }
                         }
                     }
                 }
