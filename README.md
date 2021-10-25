@@ -35,3 +35,10 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 记得设置转向模块为轴 1，油门和刹车可以在轴 2 轴 3 中任意选择 （目前和开发有关系，所以只能选择这么多）
 
 在按钮中设置升档和降档的按钮为按钮 1 或者 按钮 2
+
+
+## 3. 开发
+
+* APP 端
+
+* PC 端
