@@ -1,17 +1,19 @@
 package com.github.nthily.swsclient.page.console
 
+import android.content.pm.ActivityInfo
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.nthily.swsclient.ui.view.ComposeVerticalSlider
@@ -19,6 +21,8 @@ import com.github.nthily.swsclient.ui.view.DownShiftButton
 import com.github.nthily.swsclient.ui.view.UpShiftButton
 import com.github.nthily.swsclient.ui.view.rememberComposeVerticalSliderState
 import com.github.nthily.swsclient.utils.Sender
+import com.github.nthily.swsclient.utils.Utils
+import com.github.nthily.swsclient.utils.Utils.findActivity
 import com.github.nthily.swsclient.viewModel.AppViewModel
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel
 import com.github.nthily.swsclient.viewModel.Screen
@@ -45,11 +49,27 @@ fun Console(
 
     val os = appViewModel.mBluetoothSocket.outputStream
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
-    LaunchedEffect(true) {
-        consoleViewModel.registerSensorListeners()    // 注册传感器监听器
+    DisposableEffect(true) {
+        // 当进入这个 Composable
+        consoleViewModel.registerSensorListeners()
         consoleViewModel.onSensorDataChanged = { data ->
-            scope.launch(Dispatchers.IO) { os.write(Sender.sendSensorData(data)) }
+            if (appViewModel.mBluetoothSocket.isConnected) {
+                scope.launch(Dispatchers.IO) { os.write(Sender.getSensorData(data)) }
+            }
+        }
+        onDispose { // 当离开这个 Composable
+            consoleViewModel.unregisterListener()   // 取消传感器监听器
+        }
+    }
+
+    DisposableEffect(Unit) {
+        val activity = context.findActivity() ?: return@DisposableEffect onDispose { }
+        val originalOrientation = activity.requestedOrientation
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        onDispose {
+            activity.requestedOrientation = originalOrientation
         }
     }
 
@@ -65,27 +85,27 @@ fun Console(
             progressValue = (brakeValue * 100).toInt(),
             onProgressChanged =  {
                 consoleViewModel.brakeValue.value = it / 100f
-                scope.launch(Dispatchers.IO) { os.write(Sender.sendBrakeData(brakeValue)) }
+                scope.launch(Dispatchers.IO) { os.write(Sender.getBrakeData(brakeValue)) }
             }
         ) {
             consoleViewModel.brakeValue.value = 0f
             brakeState.update(0)
-            scope.launch(Dispatchers.IO) { os.write(Sender.sendBrakeData(brakeValue)) }
+            scope.launch(Dispatchers.IO) { os.write(Sender.getBrakeData(brakeValue)) }
         }
         Spacer(Modifier.padding(horizontal = 10.dp))
         UpShiftButton { // 升档
             scope.launch(Dispatchers.IO) {
-                os.write(Sender.sendUpShiftButtonsData(true))
+                os.write(Sender.getUpShiftButtonsData(true))
                 delay(150)
-                os.write(Sender.sendUpShiftButtonsData(false))
+                os.write(Sender.getUpShiftButtonsData(false))
             }
         }
         Spacer(Modifier.padding(horizontal = 60.dp))
         DownShiftButton { // 降档
             scope.launch(Dispatchers.IO) {
-                os.write(Sender.sendDownShiftButtonsData(true))
+                os.write(Sender.getDownShiftButtonsData(true))
                 delay(150)
-                os.write(Sender.sendDownShiftButtonsData(false))
+                os.write(Sender.getDownShiftButtonsData(false))
             }
         }
         Spacer(Modifier.padding(horizontal = 10.dp))
@@ -94,12 +114,12 @@ fun Console(
             progressValue = (throttleValue * 100).toInt(),
             onProgressChanged =  {
                 consoleViewModel.throttleValue.value = it / 100f
-                scope.launch(Dispatchers.IO) { os.write(Sender.sendThrottleData(throttleValue)) }
+                scope.launch(Dispatchers.IO) { os.write(Sender.getThrottleData(throttleValue)) }
             }
         ) {
             consoleViewModel.throttleValue.value = 0f
             throttleState.update(0)
-            scope.launch(Dispatchers.IO) { os.write(Sender.sendThrottleData(throttleValue)) }
+            scope.launch(Dispatchers.IO) { os.write(Sender.getThrottleData(throttleValue)) }
         }
     }
 

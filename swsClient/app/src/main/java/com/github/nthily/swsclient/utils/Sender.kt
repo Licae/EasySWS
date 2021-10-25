@@ -10,7 +10,7 @@ package com.github.nthily.swsclient.utils
 
 object Sender {
 
-    fun sendUpShiftButtonsData(
+    fun getUpShiftButtonsData(
         press: Boolean
     ): ByteArray {
 
@@ -26,7 +26,7 @@ object Sender {
         return packetSize + packetType + input + packetData // 返回数据包 [长度][包类型][按钮ID][按钮状态]
     }
 
-    fun sendDownShiftButtonsData(
+    fun getDownShiftButtonsData(
         press: Boolean,
     ): ByteArray {
 
@@ -42,7 +42,7 @@ object Sender {
         return packetSize + packetType + input + packetData // 返回数据包 [长度][包类型][按钮ID][按钮状态]
     }
 
-    fun sendBrakeData(
+    fun getBrakeData(
         value: Float
     ): ByteArray {
 
@@ -54,7 +54,7 @@ object Sender {
         return packetSize + packetType + input + packetData // 返回数据包 [长度][包类型][轴ID][轴的值]
     }
 
-    fun sendThrottleData(
+    fun getThrottleData(
         value: Float
     ): ByteArray {
 
@@ -66,7 +66,7 @@ object Sender {
         return packetSize + packetType + input + packetData // 返回数据包 [长度][包类型][轴ID][轴的值]
     }
 
-    fun sendSensorData(
+    fun getSensorData(
         value: Float
     ): ByteArray {
         val input = byteArrayOf(PacketType.Input.axisX)
