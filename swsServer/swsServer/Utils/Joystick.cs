@@ -11,7 +11,9 @@ namespace swsServer
     static class Joystick
     {
         private static vJoy _joystick = new ();
-        private static vJoy.JoystickState _joystickState = new ();
+        private static vJoy.JoystickState _joystickState;
+        private static int _joystickAxisMax;
+        private static uint _joystickID;
 
         static public void Init()
         {
@@ -53,17 +55,33 @@ namespace swsServer
                 Console.WriteLine($"vJoy 驱动正在运行！vJoy 版本: {_joystick.GetvJoyVersion()}\n");
             }
 
-            _joystickState.bDevice = GetDeviceId();
+            _joystickID = GetDeviceId();
 
-            _joystickState.AxisX = 1;
-            _joystickState.AxisY = 2;
-            _joystickState.AxisZ = 3;
-            _joystickState.AxisXRot = 4;
-            _joystickState.AxisYRot = 5;
-            _joystickState.AxisZRot = 6;
-            _joystickState.Slider = 7;
-            _joystickState.Dial = 8;
+            long axisMax = 0;
+            _joystick.GetVJDAxisMax(_joystickID, HID_USAGES.HID_USAGE_X, ref axisMax);
+            _joystickAxisMax = (int)axisMax;
+            int middle = _joystickAxisMax / 2;
+
+            _joystickState = new()
+            {
+                bDevice = (Byte)_joystickID,
+                AxisX = middle,
+                AxisY = middle,
+                AxisZ = middle,
+                AxisXRot = middle,
+                AxisYRot = middle,
+                AxisZRot = middle,
+                Slider = middle,
+                Dial = middle,
+                bHats = uint.MaxValue,
+                bHatsEx1 = uint.MaxValue,
+                bHatsEx2 = uint.MaxValue,
+                bHatsEx3 = uint.MaxValue
+            };
+
             _joystick.AcquireVJD(_joystickState.bDevice);
+
+
         }
         static public void DetectData(byte[] data)
         {
@@ -72,11 +90,41 @@ namespace swsServer
             switch(type)
             {
                 case 1: // buttons
-                    var value = (uint)data[5] * 1000 + (uint)data[4] * 100 + (uint)data[3] * 10 + (uint)data[2];
+                {
+                    var value = BitConverter.ToUInt32(data, 2);
                     Console.WriteLine(value);
                     _joystickState.Buttons = value;
                     _joystick.UpdateVJD(_joystickState.bDevice, ref _joystickState);
                     break;
+                }
+                case 10: // 方向盘
+                { 
+                    var value = BitConverter.Int32BitsToSingle(BitConverter.ToInt32(data, 2));
+                    float ratio = Math.Clamp(value, 0.0F, 1.0F);
+                    value = (int)(_joystickAxisMax * ratio);
+                    Console.WriteLine($"接收成功 数值为{value}");
+                    _joystickState.AxisX = (int)value;
+                    _joystick.UpdateVJD(_joystickState.bDevice, ref _joystickState);
+                    break;
+                }
+                case 11: // 刹车
+                {
+                    var value = BitConverter.Int32BitsToSingle(BitConverter.ToInt32(data, 2));
+                    float ratio = Math.Clamp(value, 0.0F, 1.0F);
+                    value = (int)(_joystickAxisMax * ratio);
+                    _joystickState.AxisY = (int)value;
+                    _joystick.UpdateVJD(_joystickState.bDevice, ref _joystickState);
+                    break;
+                }
+                case 12: // 油门
+                {
+                    var value = BitConverter.Int32BitsToSingle(BitConverter.ToInt32(data, 2));
+                    float ratio = Math.Clamp(value, 0.0F, 1.0F);
+                    value = (int)(_joystickAxisMax * ratio);
+                    _joystickState.AxisZ = (int)value;
+                    _joystick.UpdateVJD(_joystickState.bDevice, ref _joystickState);
+                    break;
+                }
             }
         }
 

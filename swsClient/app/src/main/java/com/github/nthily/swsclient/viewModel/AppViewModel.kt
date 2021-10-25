@@ -7,8 +7,6 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Context.BLUETOOTH_SERVICE
 import android.content.IntentFilter
-import android.os.Handler
-import android.os.HandlerThread
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,14 +14,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.github.nthily.swsclient.utils.BluetoothReceiver
-import com.github.nthily.swsclient.utils.Sender
 import com.github.nthily.swsclient.utils.Utils
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,15 +43,12 @@ class AppViewModel(
     var bthDiscovering = mutableStateOf(false)
     var bthDeviceConnectState = mutableStateOf(false)
 
-
     var selectedPairedDevice = mutableStateOf<BluetoothDevice?>(null)
 
     private val bluetoothReceiver = BluetoothReceiver(
         onDeviceBondStateChanged = { device, state, prevState ->
-            Utils.log("设备 ${device.name} 状态是 ${device.bondState}")
             when(state) {
                 BluetoothDevice.BOND_NONE -> {
-                    Utils.log("test: $prevState")
                     if(prevState == BluetoothDevice.BOND_BONDING) {
                        // recompose
                         scannedDevices.remove(device)
@@ -74,8 +64,6 @@ class AppViewModel(
                     isBondingAnyDevice = false
                 }
                 BluetoothDevice.BOND_BONDING -> {
-                    Utils.log("设备正在绑定")
-
                     // recompose
                     scannedDevices.remove(device)
                     scannedDevices.add(0, device)
@@ -210,4 +198,9 @@ class AppViewModel(
 
 fun BluetoothDevice.removeBond() {
     this.javaClass.getMethod("removeBond").invoke(this)
+}
+
+sealed class Screen(val route: String) {
+    object Main: Screen("main")
+    object Console : Screen("console")
 }

@@ -72,6 +72,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import com.github.nthily.swsclient.page.console.Console
+import com.github.nthily.swsclient.viewModel.ConsoleViewModel
+import com.github.nthily.swsclient.viewModel.Screen
 
 class SwsclientApp: Application() {
     override fun onCreate() {
@@ -89,9 +91,10 @@ class SwsclientApp: Application() {
     }
 }
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(){
 
     private val appViewModel by viewModels<AppViewModel>()
+    private val consoleViewModel by viewModels<ConsoleViewModel>()
 
     @RequiresApi(Build.VERSION_CODES.Q)
     @ExperimentalComposeUiApi
@@ -100,18 +103,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycle.addObserver(appViewModel)
+        lifecycle.addObserver(consoleViewModel)
 
         setContent {
             SwsClientTheme {
 
                 val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = "main") {
-                    composable("main") {
+                NavHost(navController = navController, startDestination = Screen.Main.route) {
+                    composable(Screen.Main.route) {
                         Main(appViewModel, navController)
                     }
-                    composable("console") {
-                        Console(appViewModel, navController)
+                    composable(Screen.Console.route) {
+                        Console(appViewModel, consoleViewModel, navController)
                     }
                 }
             }
@@ -483,14 +487,22 @@ fun SheetContent(
 
 @Composable
 fun GetDeviceIcon(device: BluetoothDevice) {
-    val icon: Unit = when(device.bluetoothClass.deviceClass) {
+    return when (device.bluetoothClass.deviceClass) {
         BluetoothClass.Device.COMPUTER_LAPTOP -> Icon(painterResource(R.drawable.laptop), null)
         BluetoothClass.Device.PHONE_SMART -> Icon(painterResource(R.drawable.smartphone), null)
-        BluetoothClass.Device.AUDIO_VIDEO_HEADPHONES -> Icon(painterResource(R.drawable.headphones), null)
-        BluetoothClass.Device.AUDIO_VIDEO_VIDEO_DISPLAY_AND_LOUDSPEAKER -> Icon(painterResource(R.drawable.tv), null)
+        BluetoothClass.Device.AUDIO_VIDEO_HEADPHONES -> Icon(
+            painterResource(R.drawable.headphones),
+            null
+        )
+        BluetoothClass.Device.AUDIO_VIDEO_VIDEO_DISPLAY_AND_LOUDSPEAKER -> Icon(
+            painterResource(R.drawable.tv),
+            null
+        )
         BluetoothClass.Device.WEARABLE_WRIST_WATCH -> Icon(painterResource(R.drawable.watch), null)
-        BluetoothClass.Device.Major.UNCATEGORIZED -> Icon(painterResource(R.drawable.bluetooth), null)
+        BluetoothClass.Device.Major.UNCATEGORIZED -> Icon(
+            painterResource(R.drawable.bluetooth),
+            null
+        )
         else -> Icon(painterResource(R.drawable.bluetooth), null)
     }
-    return icon
 }
