@@ -25,11 +25,14 @@ class BluetoothReceiver(
             BluetoothDevice.ACTION_FOUND -> {
                 val device: BluetoothDevice? =
                     intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                /*
                 val deviceName = device?.name
                 val deviceHardwareAddress = device?.address
                 val bluetoothClass = device?.bluetoothClass?.deviceClass
                 val bluetoothMajor = device?.bluetoothClass?.majorDeviceClass
                 Utils.log("发现了 $deviceName 地址 $deviceHardwareAddress $bluetoothClass 主类型是 $bluetoothMajor")
+
+                 */
                 device?.let { onFoundDevice(it) }
             }
             BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {

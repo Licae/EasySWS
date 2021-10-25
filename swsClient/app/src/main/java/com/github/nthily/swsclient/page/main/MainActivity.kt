@@ -1,7 +1,6 @@
 package com.github.nthily.swsclient.page.main
 
 import android.Manifest
-import android.app.Application
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager.PERMISSION_GRANTED

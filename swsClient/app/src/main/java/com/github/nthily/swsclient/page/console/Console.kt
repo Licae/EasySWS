@@ -1,12 +1,10 @@
 package com.github.nthily.swsclient.page.console
 
-import android.content.pm.ActivityInfo
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -15,23 +13,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.github.nthily.swsclient.ui.view.ComposeVerticalSlider
 import com.github.nthily.swsclient.ui.view.DownShiftButton
 import com.github.nthily.swsclient.ui.view.UpShiftButton
 import com.github.nthily.swsclient.ui.view.rememberComposeVerticalSliderState
 import com.github.nthily.swsclient.utils.Sender
-import com.github.nthily.swsclient.utils.Utils
-import com.github.nthily.swsclient.utils.Utils.findActivity
 import com.github.nthily.swsclient.viewModel.AppViewModel
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel
 import com.github.nthily.swsclient.viewModel.Screen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.util.*
 
 // 控制器的界面
 
@@ -50,27 +43,13 @@ fun Console(
     val brakeState = rememberComposeVerticalSliderState()
     val brakeValue by remember { consoleViewModel.brakeValue}
 
-    val context = LocalContext.current
     val os = appViewModel.mBluetoothSocket.outputStream
     val scope = rememberCoroutineScope()
 
-    DisposableEffect(true) {
-        // 当进入这个 Composable
+    LaunchedEffect(true) {
         consoleViewModel.registerSensorListeners()    // 注册传感器监听器
         consoleViewModel.onSensorDataChanged = { data ->
-            os.write(Sender.sendSensorData(data))
-        }
-        onDispose { // 当离开这个 Composable
-            consoleViewModel.unregisterListener()   // 取消传感器监听器
-        }
-    }
-
-    DisposableEffect(Unit) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose { }
-        val originalOrientation = activity.requestedOrientation
-        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        onDispose {
-            activity.requestedOrientation = originalOrientation
+            scope.launch(Dispatchers.IO) { os.write(Sender.sendSensorData(data)) }
         }
     }
 

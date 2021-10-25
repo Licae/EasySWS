@@ -189,8 +189,7 @@ class AppViewModel(
                 }
 
             } catch (e: Exception) {
-                Utils.log("服务端未开启\n ${e.printStackTrace()}")
-                viewModelScope.launch { Toast.makeText(app.applicationContext, "无法连接", Toast.LENGTH_LONG).show() }
+                viewModelScope.launch { Toast.makeText(app.applicationContext, "服务端未开启\n", Toast.LENGTH_LONG).show() }
             }
         }
     }

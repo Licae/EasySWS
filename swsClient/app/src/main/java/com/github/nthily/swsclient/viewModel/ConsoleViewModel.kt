@@ -10,15 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import com.github.nthily.swsclient.utils.PacketType
-import com.github.nthily.swsclient.utils.Sender
-import com.github.nthily.swsclient.utils.Utils
-import com.github.nthily.swsclient.utils.toByteArray
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.OutputStream
+import java.lang.Exception
 
 class ConsoleViewModel(
     application: Application,
@@ -103,7 +98,11 @@ class ConsoleViewModel(
                 }
                 else -> 0.5F
             }.coerceIn(0.0F, 1.0F)
-            onSensorDataChanged?.invoke(x)
+            try {
+                onSensorDataChanged?.invoke(x)
+            } catch (e: Exception) {
+                unregisterListener()
+            }
         }
     }
 
