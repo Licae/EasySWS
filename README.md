@@ -13,4 +13,4 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 |步骤1|步骤2|步骤3|
 |------|-----|-------|
-|<img src="https://user-images.githubusercontent.com/31311826/138748056-659b0b1c-9c33-47fe-99fe-8b26e3b1ae24.jpg" height = 50% width = 50%>|<img src="https://user-images.githubusercontent.com/31311826/138748076-047cb8ca-378a-4b4e-9f7b-e7faff45c3c7.jpg" height = 50% width = 50%>|<img src="https://user-images.githubusercontent.com/31311826/138748081-fa850e89-767e-4f75-878a-4f64993f04e1.jpg" height = 50% width = 50%>|
+|<img src="https://user-images.githubusercontent.com/31311826/138748056-659b0b1c-9c33-47fe-99fe-8b26e3b1ae24.jpg" height = 80% width = 80%>|<img src="https://user-images.githubusercontent.com/31311826/138748076-047cb8ca-378a-4b4e-9f7b-e7faff45c3c7.jpg" height = 80% width = 80%>|<img src="https://user-images.githubusercontent.com/31311826/138748081-fa850e89-767e-4f75-878a-4f64993f04e1.jpg" height = 80% width = 80%>|
