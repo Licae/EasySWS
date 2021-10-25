@@ -33,4 +33,5 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 右边的轴 2 和轴 3 将会归零，这时候在你的 `app` 中尝试滑动滑条和按按钮，测试右边的 `vJoy device` 是否产生了变化，如果是的话，那么恭喜你，你可以开始游玩游戏了！
 
 记得设置转向模块为轴 1，油门和刹车可以在轴 2 轴 3 中任意选择 （目前和开发有关系，所以只能选择这么多）
+
 在按钮中设置升档和降档的按钮为按钮 1 或者 按钮 2
