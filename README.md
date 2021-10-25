@@ -20,14 +20,17 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 如果你有 [`Assetto Corsa Content Manager`](https://acstuff.ru/app/) 的话，可以在设置中查看是否成功启用了 `vjoy` 以及是否能够操控
 
-开启了 `vjoy` 的情况下
+* 开启了 `vjoy` 的情况下
 
 ![image](https://user-images.githubusercontent.com/31311826/138749275-3e9554c6-e2c0-4a85-b47d-5cb903da0831.png)
 
 注意右边的 “检测到的设备”，如果成功安装 `vJoy` 并且打开了 `vJoy` 驱动，将会显示 vJoy Device 以及 8  条都在中间的轴
 
-开启了 `exe` 并且和 `app` 成功连接的情况下
+* 开启了 `exe` 并且和 `app` 成功连接的情况下
 
 ![image](https://user-images.githubusercontent.com/31311826/138749501-24613388-04e7-44de-842d-984d5587f293.png)
 
 右边的轴 2 和轴 3 将会归零，这时候在你的 `app` 中尝试滑动滑条和按按钮，测试右边的 `vJoy device` 是否产生了变化，如果是的话，那么恭喜你，你可以开始游玩游戏了！
+
+记得设置转向模块为轴 1，油门和刹车可以在轴 2 轴 3 中任意选择 （目前和开发有关系，所以只能选择这么多）
+在按钮中设置升档和降档的按钮为按钮 1 或者 按钮 2
