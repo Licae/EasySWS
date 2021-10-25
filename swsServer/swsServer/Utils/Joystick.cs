@@ -102,7 +102,6 @@ namespace swsServer
                     var value = BitConverter.Int32BitsToSingle(BitConverter.ToInt32(data, 2));
                     float ratio = Math.Clamp(value, 0.0F, 1.0F);
                     value = (int)(_joystickAxisMax * ratio);
-                    Console.WriteLine($"接收成功 数值为{value}");
                     _joystickState.AxisX = (int)value;
                     _joystick.UpdateVJD(_joystickState.bDevice, ref _joystickState);
                     break;

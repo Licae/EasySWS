@@ -23,6 +23,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
+/*
+    Original Author: aakarshrestha https://github.com/aakarshrestha
+ */
+
 private const val MAX_VALUE = 100
 private const val MIN_VALUE = 0
 
