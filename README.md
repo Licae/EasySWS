@@ -41,4 +41,10 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 * APP 端
 
+首先你需要准备的东西有：
+
+* `Android Studio` (需支持 Jetpack Compose)
+* `Compose` 版本 `1.0.4`
+* `Kotlin` 版本 `1.5.31`
+
 * PC 端
