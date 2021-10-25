@@ -45,6 +45,7 @@ class AppViewModel(
     var bthDeviceConnectState = mutableStateOf(false)
 
     var selectedPairedDevice = mutableStateOf<BluetoothDevice?>(null)
+    var serverEnabled = mutableStateOf(false)
 
     private val bluetoothReceiver = BluetoothReceiver(
         onDeviceBondStateChanged = { device, state, prevState ->
@@ -182,9 +183,13 @@ class AppViewModel(
                         while (true) {
                             val msgBytes = mBluetoothSocket.inputStream
                             val msg = mBuffer.decodeToString(endIndex = msgBytes.read(mBuffer))
-                            if(msg == "connected") { viewModelScope.launch { navController.navigate("console") } }
+                            if(msg == "connected") {
+                                viewModelScope.launch { navController.navigate("console") }
+                                serverEnabled.value = true
+                            }
                         }
                     } catch (e: Exception) {
+                        serverEnabled.value = false
                         viewModelScope.launch { navController.popBackStack() }
                     }
                 }

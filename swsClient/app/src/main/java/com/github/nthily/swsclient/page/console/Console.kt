@@ -29,6 +29,7 @@ import com.github.nthily.swsclient.viewModel.Screen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 // 控制器的界面
 
@@ -55,7 +56,7 @@ fun Console(
         // 当进入这个 Composable
         consoleViewModel.registerSensorListeners()
         consoleViewModel.onSensorDataChanged = { data ->
-            if (appViewModel.mBluetoothSocket.isConnected) {
+            if (appViewModel.mBluetoothSocket.isConnected && appViewModel.serverEnabled.value) {
                 scope.launch(Dispatchers.IO) { os.write(Sender.getSensorData(data)) }
             }
         }
