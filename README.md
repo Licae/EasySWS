@@ -2,7 +2,7 @@
 
 Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Assetto Corsa Competizione / F1 20XX
 
-让你的手机变成虚拟方向盘！适用于神力科莎，神力科莎争锋，F1 系列的赛车模拟游戏
+让你的手机变成虚拟方向盘！适用于神力科莎，神力科莎争锋，F1 系列等赛车模拟游戏
 
 ## 1. 开始安装
 
