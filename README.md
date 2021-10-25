@@ -4,7 +4,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 让你的手机变成虚拟方向盘！适用于神力科莎，神力科莎争锋，F1 系列等赛车模拟游戏
 
-## 1. 开始安装
+## 1. 开始安装 🚀
 
 * 下载 `release` 中的 `app` 和 `exe` 
 * 在电脑上安装 [`vJoy`](https://github.com/jshafer817/vJoy) (一个虚拟游戏手柄)，过高或者过低的版本可能会影响软件运行，超链接中的版本是刚好适用于当前软件的
@@ -16,7 +16,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 |<img src="https://user-images.githubusercontent.com/31311826/138766412-10616020-bf44-4113-b2a3-01e0d08602f7.jpg" height = 100% width = 100%>|<img src="https://user-images.githubusercontent.com/31311826/138766529-62231ac1-f1c9-44d3-880c-20ddcd79db8d.jpg" height = 100% width = 100%>|<img src="https://user-images.githubusercontent.com/31311826/138748081-fa850e89-767e-4f75-878a-4f64993f04e1.jpg" height = 100% width = 100%>|
 
 
-## 2. 测试 && 游玩
+## 2. 测试 && 游玩 💨
 
 如果你有 [`Assetto Corsa Content Manager`](https://acstuff.ru/app/) 的话，可以在设置中查看是否成功启用了 `vJoy` 以及是否能够操控
 
@@ -37,7 +37,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 在按钮中设置升档和降档的按钮为按钮 1 或者 按钮 2
 
 
-## 3. 开发
+## 3. 开发 💦
 
 * APP 端
  
@@ -64,7 +64,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
   * `Visual Studio`
   * `InTheHand.Net.Bluetooth` 库，版本 4.0.21
 
-## 4. 未来支持
+## 4. 未来支持 👀
 
 * APP 端自定义控件，大小，位置等
 * PC 端的 UI 设计
@@ -74,7 +74,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * 根据不同手机支持的硬件设备提高体验，如在一些手机上可以调用线性马达
 * 待续...
 
-## 5. 开源协议
+## 5. 开源协议 📄
 
 ```
     Copyright (C) 2021 Nthily.
