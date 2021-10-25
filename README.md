@@ -6,4 +6,5 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 
 ## 开始使用
 
-下载 `release` 中的 `app` 和 `exe` 
+* 下载 `release` 中的 `app` 和 `exe` 
+* 在电脑上安装 [`vjoy`](https://github.com/jshafer817/vJoy) (一个虚拟游戏手柄)
