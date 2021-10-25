@@ -74,7 +74,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * 根据不同手机支持的硬件设备提高体验，如在一些手机上可以调用线性马达
 * 待续...
 
-## 5. 所用的第三方库
+## 5. 所用的第三方库 🔑
 
 [compose-vertical-slider](https://github.com/aakarshrestha/compose-vertical-slider)
 
