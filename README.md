@@ -2,12 +2,12 @@
 
 Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Assetto Corsa Competizione / F1 20XX
 
-让你的手机变成虚拟方向盘！适用于神力科莎，神力科莎争锋，F1 系列的赛车模拟游戏
+让你的手机变成虚拟方向盘！适用于神力科莎，神力科莎争锋，F1 系列等赛车模拟游戏
 
-## 1. 开始安装
+## 1. 开始安装 🚀
 
 * 下载 `release` 中的 `app` 和 `exe` 
-* 在电脑上安装 [`vJoy`](https://github.com/jshafer817/vJoy) (一个虚拟游戏手柄)，过高或者过低的版本可能会影响软件运行，超链接中的版本是刚好适用于当前的软件的
+* 在电脑上安装 [`vJoy`](https://github.com/jshafer817/vJoy) (一个虚拟游戏手柄)，过高或者过低的版本可能会影响软件运行，超链接中的版本是刚好适用于当前软件的
 * 运行下载完的 `exe`，这将会自动启动 `vjoy` 驱动 (期间会有 UAC 授权确认)，并且会开启电脑的蓝牙连接广播。如果检测不到 `vjoy 或者未授权会停止软件的运行
 * 运行下载完的 `app`, 和电脑设备进行配对（此操作也可以在手机的系统蓝牙完成），配对完成后会在已配对的列表中显示你的电脑设备，点击一次设备会弹出一个窗口，在底下点击开始连接就能尝试和电脑设备进行连接。连接成功会自动跳转到操控界面
 
@@ -16,7 +16,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 |<img src="https://user-images.githubusercontent.com/31311826/138766412-10616020-bf44-4113-b2a3-01e0d08602f7.jpg" height = 100% width = 100%>|<img src="https://user-images.githubusercontent.com/31311826/138766529-62231ac1-f1c9-44d3-880c-20ddcd79db8d.jpg" height = 100% width = 100%>|<img src="https://user-images.githubusercontent.com/31311826/138748081-fa850e89-767e-4f75-878a-4f64993f04e1.jpg" height = 100% width = 100%>|
 
 
-## 2. 测试 && 游玩
+## 2. 测试 && 游玩 💨
 
 如果你有 [`Assetto Corsa Content Manager`](https://acstuff.ru/app/) 的话，可以在设置中查看是否成功启用了 `vJoy` 以及是否能够操控
 
@@ -37,7 +37,7 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 在按钮中设置升档和降档的按钮为按钮 1 或者 按钮 2
 
 
-## 3. 开发
+## 3. 开发 💦
 
 * APP 端
  
@@ -63,3 +63,36 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * 
   * `Visual Studio`
   * `InTheHand.Net.Bluetooth` 库，版本 4.0.21
+
+## 4. 未来支持 👀
+
+* APP 端自定义控件，大小，位置等
+* PC 端的 UI 设计
+* 多语言 （PC / APP）
+* APP 端的 UI 设计
+* 支持更多 vJoy 轴 / 按钮，尝试实现一些力反馈
+* 根据不同手机支持的硬件设备提高体验，如在一些手机上可以调用线性马达
+* 待续...
+
+## 5. 所用的第三方库
+
+[compose-vertical-slider](https://github.com/aakarshrestha/compose-vertical-slider)
+
+## 6. 开源协议 📄
+
+```
+    Copyright (C) 2021 Nthily.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```
