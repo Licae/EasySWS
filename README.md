@@ -40,5 +40,26 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 ## 3. 开发
 
 * APP 端
+ 
+  * `Android Studio` (需支持 Jetpack Compose)
+  * `Compose` 版本 `1.0.4`
+  * `Kotlin` 版本 `1.5.31`
+
+软件中使用的传输数据包格式为：[数据包长度][数据包类型][子类型][数据]
+
+* 数据包长度是 1 字节的 `Byte` 类型
+
+* 数据包类型是长度为 1 字节的 `Byte` 类型
+
+* 子类型是长度为 1 字节的 `Byte` 类型
+
+* 数据是长度为 4 字节的 `Float` 或 `Int` 类型
+
+* 数据包长度 = 数据包类型 + 子类型 + 数据
+
+数据包中的数据包长度是为了避免在高速传输数据中，因为 `inputStream` 可能无法完整的读取包的长度，导致读取数据失败（因为蓝牙传输可能是和 TCP 协议类似，面向流的）。所以设计了一个长度来描述这个数据包的长度，之后再循环读取真正的包的数据
 
 * PC 端
+* 
+  * `Visual Studio`
+  * `InTheHand.Net.Bluetooth` 库，版本 4.0.21
