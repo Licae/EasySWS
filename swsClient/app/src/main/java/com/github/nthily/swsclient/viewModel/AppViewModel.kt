@@ -197,11 +197,8 @@ class AppViewModel(
                         while (true) {
                             val msgBytes = mBluetoothSocket.inputStream
                             val msg = mBuffer.decodeToString(endIndex = msgBytes.read(mBuffer))
-                            Utils.log("接收到 $msg")
                             if(msg == "connected") {
-                                viewModelScope.launch {
-                                    navController.navigate("controller")
-                                }
+                                viewModelScope.launch { navController.navigate("console") }
                             }
                         }
                     } catch (e: Exception) {

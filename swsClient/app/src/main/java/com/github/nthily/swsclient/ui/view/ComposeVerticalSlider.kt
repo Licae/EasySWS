@@ -1,4 +1,4 @@
-package com.github.nthily.swsclient.utils
+package com.github.nthily.swsclient.ui.view
 
 import android.os.Build
 import android.view.MotionEvent

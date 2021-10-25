@@ -71,7 +71,7 @@ import com.github.nthily.swsclient.viewModel.removeBond
 import kotlinx.coroutines.launch
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
-import com.github.nthily.swsclient.page.controller.Controller
+import com.github.nthily.swsclient.page.console.Console
 
 class SwsclientApp: Application() {
     override fun onCreate() {
@@ -110,8 +110,8 @@ class MainActivity : ComponentActivity() {
                     composable("main") {
                         Main(appViewModel, navController)
                     }
-                    composable("controller") {
-                        Controller(appViewModel, navController)
+                    composable("console") {
+                        Console(appViewModel, navController)
                     }
                 }
             }

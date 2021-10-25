@@ -1,36 +1,36 @@
-package com.github.nthily.swsclient.page.controller
+package com.github.nthily.swsclient.page.console
 
 import android.content.pm.ActivityInfo
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.github.nthily.swsclient.R
-import com.github.nthily.swsclient.utils.ComposeVerticalSlider
-import com.github.nthily.swsclient.utils.ShiftButton
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.github.nthily.swsclient.utils.Utils
+import com.github.nthily.swsclient.ui.view.ComposeVerticalSlider
+import com.github.nthily.swsclient.ui.view.DownShiftButton
+import com.github.nthily.swsclient.ui.view.UpShiftButton
+import com.github.nthily.swsclient.ui.view.rememberComposeVerticalSliderState
+import com.github.nthily.swsclient.utils.Joystick
 import com.github.nthily.swsclient.utils.Utils.findActivity
-import com.github.nthily.swsclient.utils.rememberComposeVerticalSliderState
 import com.github.nthily.swsclient.viewModel.AppViewModel
-import java.lang.Exception
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+// 控制器的界面
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalComposeUiApi
 @Composable
-fun Controller(
+fun Console(
     appViewModel: AppViewModel,
     navController: NavController
 ) {
@@ -38,7 +38,8 @@ fun Controller(
     val brakeState = rememberComposeVerticalSliderState()
     val throttleState = rememberComposeVerticalSliderState()
     val context = LocalContext.current
-
+    val os = appViewModel.mBluetoothSocket.outputStream
+    val scope = rememberCoroutineScope()
 
     DisposableEffect(Unit) {
         val activity = context.findActivity() ?: return@DisposableEffect onDispose { }
@@ -58,7 +59,7 @@ fun Controller(
     ) {
         ComposeVerticalSlider(
             state = throttleState,
-            progressValue = 100,
+            progressValue = 0,
             onProgressChanged =  {
 
             }
@@ -66,26 +67,25 @@ fun Controller(
 
         }
         Spacer(Modifier.padding(horizontal = 10.dp))
-        ShiftButton(
-            onClick = {
-                val os = appViewModel.mBluetoothSocket.outputStream
-                val str = "升挡".encodeToByteArray()
-                os.write(str)
-                os.flush()
-            },
-        ) {
-            Icon(Icons.Filled.Add, contentDescription = null, tint = Color.White)
+        UpShiftButton {
+            scope.launch(Dispatchers.IO) {
+                os.write(Joystick.sendUpShiftButtonsData(true))
+                delay(100)
+                os.write(Joystick.sendUpShiftButtonsData(false))
+            }
         }
         Spacer(Modifier.padding(horizontal = 60.dp))
-        ShiftButton(
-            onClick = { }
-        ) {
-            Icon(painterResource(id = R.drawable.remove), contentDescription = null, tint = Color.White)
+        DownShiftButton {
+            scope.launch(Dispatchers.IO) {
+                os.write(Joystick.sendDownShiftButtonsData(true))
+                delay(100)
+                os.write(Joystick.sendDownShiftButtonsData(false))
+            }
         }
         Spacer(Modifier.padding(horizontal = 10.dp))
         ComposeVerticalSlider(
             state = brakeState,
-            progressValue = 100,
+            progressValue = 0,
             onProgressChanged =  {
 
             }
@@ -95,7 +95,7 @@ fun Controller(
     }
 
     BackHandler(
-        enabled = navController.currentBackStackEntry?.destination?.route == "controller"
+        enabled = navController.currentBackStackEntry?.destination?.route == "console"
     ) {
         appViewModel.mBluetoothSocket.close()
     }
