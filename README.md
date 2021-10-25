@@ -63,3 +63,32 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * 
   * `Visual Studio`
   * `InTheHand.Net.Bluetooth` 库，版本 4.0.21
+
+## 4. 未来支持
+
+* APP 端自定义控件，大小，位置等
+* PC 端的 UI 设计
+* 多语言 （PC / APP）
+* APP 端的 UI 设计
+* 支持更多 vJoy 轴 / 按钮，尝试实现一些力反馈
+* 根据不同手机支持的硬件设备提高体验，如在一些手机上可以调用线性马达
+* 待续...
+
+## 5. 开源协议
+
+```
+    Copyright (C) 2021 Nthily.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```
