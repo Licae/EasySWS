@@ -75,22 +75,6 @@ import com.github.nthily.swsclient.page.console.Console
 import com.github.nthily.swsclient.viewModel.ConsoleViewModel
 import com.github.nthily.swsclient.viewModel.Screen
 
-class SwsclientApp: Application() {
-    override fun onCreate() {
-        super.onCreate()
-        /*
-        startKoin {
-            androidLogger()
-            androidContext(this@SwsclientApp)
-            modules(
-                module {
-                    viewModel { AppViewModel() }
-                }
-            )
-        }*/
-    }
-}
-
 class MainActivity : ComponentActivity(){
 
     private val appViewModel by viewModels<AppViewModel>()
