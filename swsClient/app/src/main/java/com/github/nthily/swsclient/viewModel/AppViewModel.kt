@@ -28,31 +28,31 @@ class AppViewModel(
     private val app = getApplication<Application>()
 
     private val bthManager = app.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
-    private val bthAdapter: BluetoothAdapter? = bthManager.adapter
+    private val bthAdapter: BluetoothAdapter? = bthManager.adapter // 蓝牙适配器，用于检测手机是否有蓝牙等
 
     private val uuid = "00001101-0000-1000-8000-00805F9B34FB"
-    private var isBondingAnyDevice = false
+    private var isBondingAnyDevice = false // 当前是否有蓝牙设备正在配对，如果没有的话则可以配对设备
 
-    val bthDevice = bthAdapter?.name
-    val pairedDevices = mutableStateListOf<BluetoothDevice>()
-    val scannedDevices = mutableStateListOf<BluetoothDevice>()
+    val bthDevice = bthAdapter?.name // 蓝牙设备名
+    val pairedDevices = mutableStateListOf<BluetoothDevice>() // 已配对的蓝牙设备列表
+    val scannedDevices = mutableStateListOf<BluetoothDevice>() // 已扫描到的蓝牙设备列表
 
     lateinit var mBluetoothSocket: BluetoothSocket
-    var bthReady = mutableStateOf(false)
-    var bthEnabled = mutableStateOf(false)
-    var showMacAddress = mutableStateOf(false)
-    var bthDiscovering = mutableStateOf(false)
+    var bthReady = mutableStateOf(false) // 蓝牙是否可用
+    var bthEnabled = mutableStateOf(false) // 蓝牙是否已启用
+    var showMacAddress = mutableStateOf(false) // 是否显示 mac 地址
+    var bthDiscovering = mutableStateOf(false) // 是否正在搜索蓝牙设备
     var bthDeviceConnectState = mutableStateOf(false)
 
-    var selectedPairedDevice = mutableStateOf<BluetoothDevice?>(null)
-    var serverEnabled = mutableStateOf(false)
+    var selectedPairedDevice = mutableStateOf<BluetoothDevice?>(null) // 当前被选中的已配对的蓝牙设备，用于底部弹窗
+    var serverEnabled = mutableStateOf(false) // 服务器是否已经开启
 
     private val bluetoothReceiver = BluetoothReceiver(
         onDeviceBondStateChanged = { device, state, prevState ->
             when(state) {
                 BluetoothDevice.BOND_NONE -> {
                     if(prevState == BluetoothDevice.BOND_BONDING) {
-                       // recompose
+                       // recompose 重组
                         scannedDevices.remove(device)
                         scannedDevices.add(device)
                         isBondingAnyDevice = false
@@ -77,6 +77,7 @@ class AppViewModel(
         onFoundDevice = {
 
             // sort device from a -> z, not null -> null
+            // 排序，从 a -> z, 有名字到无名字的蓝牙设备
 
             if(!pairedDevices.contains(it) && !scannedDevices.contains(it)) {
                 if(scannedDevices.isEmpty()) scannedDevices.add(it)
@@ -95,6 +96,7 @@ class AppViewModel(
                         }
                     }
                     // If none of the devices in scannedDevices has a name, add it to the beginning
+                    // 如果当前已扫描出来的蓝牙设备都没有名字，就添加到最前面
                     if(size == scannedDevices.size) scannedDevices.add(0, it)
                 }
             }
@@ -195,7 +197,7 @@ class AppViewModel(
                 }
 
             } catch (e: Exception) {
-                viewModelScope.launch { Toast.makeText(app.applicationContext, "服务端未开启\n", Toast.LENGTH_LONG).show() }
+                viewModelScope.launch { Toast.makeText(app.applicationContext, "服务端未开启", Toast.LENGTH_LONG).show() }
             }
         }
     }
