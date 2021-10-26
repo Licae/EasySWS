@@ -1,0 +1,8 @@
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Release\net5.0\publish\swsServer.exe
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Release\net5.0\publish\swsServer.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Release\net5.0\publish\swsServer.deps.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Release\net5.0\publish\swsServer.runtimeconfig.json
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Release\net5.0\publish\swsServer.pdb
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Release\net5.0\publish\InTheHand.Net.Bluetooth.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Release\net5.0\publish\runtimes\win\lib\netcoreapp3.1\InTheHand.Net.Bluetooth.dll
+C:\Users\Anteayer\Desktop\EasySWS\swsServer\swsServer\bin\Release\net5.0\publish\vJoyInterfaceWrap.dll

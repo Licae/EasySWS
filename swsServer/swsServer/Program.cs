@@ -38,7 +38,6 @@ namespace swsServer
                             byte[] packetSizeBuffer = new byte[1];
                             mStream.Read(packetSizeBuffer, 0, 1);
                             int packetSize = (int)packetSizeBuffer[0];
-                            Console.WriteLine($"wtf {packetSize}");
                             byte[] packet = new byte[packetSize];
                             int packetIndex = 0;
                             while ((packetIndex += mStream.Read(packet, packetIndex, packetSize - packetIndex)) < packetSize);
