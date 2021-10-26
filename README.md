@@ -74,25 +74,29 @@ Use your phone as a steering wheel simulator! Suitable for Assetto Corsa / Asset
 * 根据不同手机支持的硬件设备提高体验，如在一些手机上可以调用线性马达
 * 待续...
 
-## 5. 所用的第三方库
+## 5. 所用的第三方库 🔑
 
 [compose-vertical-slider](https://github.com/aakarshrestha/compose-vertical-slider)
 
 ## 6. 开源协议 📄
 
 ```
-    Copyright (C) 2021 Nthily.
+Copyright (C) 2021 Nthily.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ```
+
+## 7. 其他 🚑
+
+目前来说，整体项目结构还是有些混乱，比如 `app` 中 `VM` 里面的东西感觉很不符合 `VM` 的定位，之后有时间可能会大改几次项目的结构，以及补完其他地方的注释
